@@ -1,5 +1,5 @@
-from Diplom_3.locators.locators import EMAIL, PASSWORD, LOGIN_BUTTON, PASSWORD_RECOVERY_LINK, EMAIL_INPUT, PASSWORD_INPUT
-from Diplom_3.pages.base_page import BasePage
+from Diplom_33.locators.locators import EMAIL, PASSWORD, LOGIN_BUTTON, PASSWORD_RECOVERY_LINK, EMAIL_INPUT, PASSWORD_INPUT
+from Diplom_33.pages.base_page import BasePage
 from selenium.webdriver.support import expected_conditions as EC
 
 

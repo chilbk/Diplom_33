@@ -1,5 +1,5 @@
-from Diplom_3.locators.locators import PROFILE_LINK, ORDER_HISTORY_LINK, LOGOUT_BUTTON, INGREDIENT_MODAL_CLOSE_BUTTON, MODAL, MODAL_CLOSE
-from Diplom_3.pages.base_page import BasePage
+from Diplom_33.locators.locators import PROFILE_LINK, ORDER_HISTORY_LINK, LOGOUT_BUTTON, INGREDIENT_MODAL_CLOSE_BUTTON, MODAL, MODAL_CLOSE
+from Diplom_33.pages.base_page import BasePage
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -23,25 +23,15 @@ class ProfilePage(BasePage):
         self.click(LOGOUT_BUTTON)
 
     def close_overlay_if_exists(self):
-        potential_classes = [
-            "Modal_modal_overlay__x2ZCr",  # Firefox
-            "Modal_modal__overlay__3U0G9",  # Chrome
-            "Modal_modal__overlay__3vY0j",  # Запасной
-        ]
-
-        for class_name in potential_classes:
+        for overlay_locator in MODAL_OVERLAYS:
             try:
-                overlay_locator = (By.CLASS_NAME, class_name)
-                # Ждём появления (если не появится — окей)
-                WebDriverWait(self.driver, 2).until(
-                    EC.presence_of_element_located(overlay_locator)
-                )
-                # Ждём пока исчезнет
-                WebDriverWait(self.driver, 5).until(
-                    EC.invisibility_of_element_located(overlay_locator)
-                )
-            except TimeoutException:
-                pass  # если не появилось или не исчезло — просто продолжаем
+                overlays = self.driver.find_elements(*overlay_locator)
+                for overlay in overlays:
+                    if overlay.is_displayed():
+                        self.driver.find_element(*INGREDIENT_MODAL_CLOSE_BUTTON).click()
+                        self.wait.until(EC.invisibility_of_element_located(overlay_locator))
+            except Exception:
+                pass
 
     def get_current_url(self):
         return self.driver.current_url

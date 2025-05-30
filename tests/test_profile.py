@@ -1,7 +1,7 @@
 import pytest
 import allure
-from Diplom_3.pages.profile_page import ProfilePage
-from Diplom_3.locators.urls import PROFILE_URL, HISTORY_URL, LOGIN_URL
+from Diplom_33.pages.profile_page import ProfilePage
+from Diplom_33.locators.urls import PROFILE_URL, HISTORY_URL, LOGIN_URL
 
 @allure.suite("Профиль")
 class TestProfile:

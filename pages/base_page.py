@@ -81,9 +81,7 @@ class BasePage:
         )
 
     def get_current_url(self):
-        """Получает текущий URL страницы"""
         return self.driver.current_url
 
     def get_page_source(self):
-        """Получает HTML-код страницы"""
         return self.driver.page_source

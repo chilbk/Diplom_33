@@ -1,9 +1,9 @@
 import time
 import pytest
 import allure
-from Diplom_3.pages.main_page import MainPage
-from Diplom_3.pages.login_page import LoginPage
-from Diplom_3.locators.urls import BASE_URL
+from Diplom_33.pages.main_page import MainPage
+from Diplom_33.pages.login_page import LoginPage
+from Diplom_33.locators.urls import BASE_URL
 
 @allure.suite("Основной функционал")
 class TestMainFunctionality:

@@ -1,8 +1,8 @@
 import pytest
 import allure
-from Diplom_3.pages.password_recovery_page import PasswordRecoveryPage
-from Diplom_3.locators.urls import RESET_PASSWORD_URL
-from Diplom_3.locators.locators import NEW_PASSWORD_INPUT
+from Diplom_33.pages.password_recovery_page import PasswordRecoveryPage
+from Diplom_33.locators.urls import RESET_PASSWORD_URL
+from Diplom_33.locators.locators import NEW_PASSWORD_INPUT
 
 @allure.suite("Восстановление пароля")
 class TestPasswordRecovery:

@@ -26,6 +26,7 @@ INGREDIENT_MODAL = (By.CLASS_NAME, "Modal_modal__container__Wo2l_")
 INGREDIENT_MODAL_CLOSE_BUTTON = (By.CLASS_NAME, "Modal_modal__close__TnseK")
 BASKET_LIST = (By.CLASS_NAME, "BurgerConstructor_basket__list__l9dp_")
 INGREDIENT_ITEMS = (By.CSS_SELECTOR, "a[class*='BurgerIngredient_ingredient__']")
+INGREDIENT_COUNTER = (By.CLASS_NAME, "counter_counter__num__3nue1")
 
 # Локаторы списка заказов - feed_page.py
 ORDER_CARD = (By.CLASS_NAME, "OrderHistory_order__1VAmS")
@@ -44,6 +45,12 @@ ORDER_FEED_DONE_TODAY = (By.XPATH, "//p[text()='Выполнено за сего
 ORDER_FEED_IN_PROGRESS = (By.CSS_SELECTOR, "ul.OrderFeed_orderListReady__1YFem.OrderFeed_orderList__cBvyi > li")
 ORDER_FEED_IN_PROGRESS_LIST = (By.CSS_SELECTOR, "ul.OrderFeed_orderListReady__1YFem li")
 ORDER_MODAL_BOX = (By.CLASS_NAME, "Modal_orderBox__1xWdi")
+MODAL_CLOSE_BUTTON = (By.CLASS_NAME, "Modal_modal__close__TnseK")
+MODAL_OVERLAYS = [
+    (By.CLASS_NAME, "Modal_modal_overlay__x2ZCr"),  # Firefox
+    (By.CLASS_NAME, "Modal_modal__overlay__3U0G9"),  # Chrome
+    (By.CLASS_NAME, "Modal_modal__overlay__3vY0j"),  # запасной
+]
 
 def ingredient_by_name(name):
     return (By.XPATH, f"//p[text()='{name}']/ancestor::a")

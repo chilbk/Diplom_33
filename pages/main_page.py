@@ -1,8 +1,10 @@
 
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.action_chains import ActionChains
-from Diplom_3.pages.base_page import BasePage
-from Diplom_3.locators.locators import CONSTRUCTOR_LINK, ORDER_FEED_LINK, ingredient_by_name, INGREDIENT_MODAL, INGREDIENT_MODAL_CLOSE_BUTTON, PROFILE_LINK, EMAIL_INPUT, ORDER_MODAL_TITLE, BASKET_LIST, ORDER_BUTTON, INGREDIENT_ITEMS, ORDER_FEED_LINK, ORDER_FEED_DONE_TOTAL, ORDER_FEED_DONE_TODAY, ORDER_FEED_IN_PROGRESS_LIST, ORDER_FEED_IN_PROGRESS
+from Diplom_33.pages.base_page import BasePage
+from Diplom_33.locators.locators import (CONSTRUCTOR_LINK, ingredient_by_name, INGREDIENT_MODAL, INGREDIENT_MODAL_CLOSE_BUTTON,
+                                        PROFILE_LINK, EMAIL_INPUT, ORDER_MODAL_TITLE, BASKET_LIST, ORDER_BUTTON, INGREDIENT_ITEMS, ORDER_FEED_LINK,
+                                        MODAL_CLOSE_BUTTON, INGREDIENT_COUNTER, MODAL_OVERLAYS)
 from selenium.webdriver.support import expected_conditions as EC
 from Diplom_3.pages.profile_page import ProfilePage
 from selenium.webdriver.common.by import By
@@ -110,27 +112,20 @@ class MainPage(BasePage):
     def get_ingredient_counter_text(self, name):
         ingredient = self.wait.until(EC.visibility_of_element_located(ingredient_by_name(name)))
         try:
-            return ingredient.find_element(By.CLASS_NAME, "counter_counter__num__3nue1").text
+            return ingredient.find_element(*ingredient_by_name(name)).text
         except:
             return "0"
 
     def place_order(self):
-        # Тут закрываются скрытые модалки
         try:
-            overlay_selectors = [
-                "Modal_modal__overlay__3U0G9",
-                "Modal_modal_overlay__x2ZCr"
-            ]
-            for cls in overlay_selectors:
-                overlays = self.driver.find_elements(By.CLASS_NAME, cls)
+            for overlay_locator in MODAL_OVERLAYS:
+                overlays = self.driver.find_elements(*overlay_locator)
                 for overlay in overlays:
                     if overlay.is_displayed():
                         try:
-                            close_button = self.driver.find_element(By.CLASS_NAME, "Modal_modal__close__TnseK")
+                            close_button = self.driver.find_element(*MODAL_CLOSE_BUTTON)
                             self.driver.execute_script("arguments[0].click();", close_button)
-                            WebDriverWait(self.driver, 5).until(
-                                EC.invisibility_of_element_located((By.CLASS_NAME, cls))
-                            )
+                            self.wait.until(EC.invisibility_of_element_located(overlay_locator))
                         except Exception:
                             pass
         except Exception:
@@ -150,7 +145,7 @@ class MainPage(BasePage):
 
     def get_ingredient_counter_text(self, name):
         ingredient = self.driver.find_element(*ingredient_by_name(name))
-        return ingredient.find_element(By.CLASS_NAME, "counter_counter__num__3nue1").text
+        return ingredient.find_element(*INGREDIENT_COUNTER).text
 
     def place_sample_order_and_get_number(self):
         ingredient = self.driver.find_elements(*INGREDIENT_ITEMS)[0]
@@ -168,17 +163,12 @@ class MainPage(BasePage):
         return number
 
     def close_overlay_if_exists(self):
-        potential_classes = [
-            "Modal_modal_overlay__x2ZCr",  # Firefox
-            "Modal_modal__overlay__3U0G9",  # Chrome
-            "Modal_modal__overlay__3vY0j",  # запасной
-        ]
-        for cls in potential_classes:
+        for overlay_locator in MODAL_OVERLAYS:
             try:
-                overlays = self.driver.find_elements(By.CLASS_NAME, cls)
+                overlays = self.driver.find_elements(*overlay_locator)
                 for overlay in overlays:
                     if overlay.is_displayed():
                         self.driver.find_element(*INGREDIENT_MODAL_CLOSE_BUTTON).click()
-                        self.wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, cls)))
+                        self.wait.until(EC.invisibility_of_element_located(overlay_locator))
             except Exception:
                 pass
