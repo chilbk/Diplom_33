@@ -20,8 +20,19 @@ def driver(request):
         # options.add_argument("--headless")
         driver = webdriver.Chrome(options=options)
     elif browser == "firefox":
+        from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+        
+        # Создаем временный профиль
+        profile = FirefoxProfile()
+        profile.set_preference("browser.startup.homepage", "about:blank")
+        profile.set_preference("startup.homepage_welcome_url", "about:blank")
+        profile.set_preference("startup.homepage_welcome_url.additional", "")
+        profile.set_preference("browser.tabs.remote.autostart", False)
+        profile.set_preference("browser.tabs.remote.autostart.1", False)
+        profile.set_preference("browser.tabs.remote.autostart.2", False)
+        
         options = FirefoxOptions()
-        # options.add_argument("--headless")
+        options.profile = profile
         driver = webdriver.Firefox(options=options)
     else:
         raise ValueError("Unsupported browser")

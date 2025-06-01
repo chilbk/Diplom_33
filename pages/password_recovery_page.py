@@ -1,10 +1,6 @@
-from selenium.webdriver.common.by import By
 from Diplom_33.pages.base_page import BasePage
 from Diplom_33.locators.locators import (PROFILE_LINK, PASSWORD_RECOVERY_LINK, EMAIL_INPUT,
-                                        RECOVER_BUTTON, SHOW_PASSWORD_BUTTON, NEW_PASSWORD_INPUT, MODAL_OVERLAYS)
-from Diplom_33.pages.profile_page import ProfilePage
-from selenium.common.exceptions import NoSuchElementException
-from Diplom_33.locators.locators import INGREDIENT_MODAL_CLOSE_BUTTON
+                                        RECOVER_BUTTON, SHOW_PASSWORD_BUTTON, NEW_PASSWORD_INPUT, MODAL_OVERLAYS, INGREDIENT_MODAL_CLOSE_BUTTON)
 
 class PasswordRecoveryPage(BasePage):
     def go_to_recovery_page(self):
@@ -33,16 +29,16 @@ class PasswordRecoveryPage(BasePage):
         self.fill(NEW_PASSWORD_INPUT, password)
 
     def password_field_value_is(self, expected_value):
-        element = self.get_element_property(NEW_PASSWORD_INPUT, "value")
-        return element == expected_value
+        value = self.get_element_property(NEW_PASSWORD_INPUT, "value")
+        return value == expected_value
 
     def close_overlay_if_exists(self):
         for overlay_locator in MODAL_OVERLAYS:
             try:
-                overlays = self.driver.find_elements(*overlay_locator)
+                overlays = self.find_elements(overlay_locator)
                 for overlay in overlays:
                     if overlay.is_displayed():
-                        self.driver.find_element(*INGREDIENT_MODAL_CLOSE_BUTTON).click()
-                        self.wait.until(EC.invisibility_of_element_located(overlay_locator))
+                        self.find(INGREDIENT_MODAL_CLOSE_BUTTON).click()
+                        self.wait_invisible(overlay_locator)
             except Exception:
                 pass

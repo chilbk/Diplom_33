@@ -1,7 +1,6 @@
 import pytest
 import allure
-from Diplom_33.pages.profile_page import ProfilePage
-from Diplom_33.locators.urls import PROFILE_URL, HISTORY_URL, LOGIN_URL
+from Diplom_33.locators.urls import HISTORY_URL, LOGIN_URL, PROFILE_URL
 
 @allure.suite("Профиль")
 class TestProfile:
@@ -15,6 +14,9 @@ class TestProfile:
         with allure.step("Переход в профиль"):
             profile_setup["profile_page"].go_to_profile()
 
+        with allure.step("Проверка URL"):
+            assert profile_setup["profile_page"].get_current_url() == PROFILE_URL
+
     @allure.title("Переход к истории заказов")
     @pytest.mark.usefixtures("profile_setup")
     def test_open_order_history(self, profile_setup):
@@ -23,14 +25,13 @@ class TestProfile:
 
         with allure.step("Открытие истории заказов"):
             profile_setup["profile_page"].open_order_history()
-            profile_setup["profile_page"].go_to_profile()
 
         with allure.step("Переход к истории заказов"):
             profile_setup["profile_page"].close_overlay_if_exists()
             profile_setup["profile_page"].go_to_order_history()
 
         with allure.step("Проверка URL истории заказов"):
-            assert profile_setup["driver"].current_url == HISTORY_URL
+            assert profile_setup["profile_page"].get_current_url() == HISTORY_URL
 
     @allure.title("Выход из профиля")
     @pytest.mark.usefixtures("profile_setup")
@@ -42,6 +43,5 @@ class TestProfile:
             profile_setup["profile_page"].logout()
 
         with allure.step("Проверка URL после выхода"):
-            profile_setup["profile_page"].wait_for_url_to_contain(LOGIN_URL)
-            assert profile_setup["driver"].current_url == LOGIN_URL
-
+            profile_setup["profile_page"].wait_url_contains(LOGIN_URL)
+            assert profile_setup["profile_page"].get_current_url() == LOGIN_URL

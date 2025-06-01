@@ -2,37 +2,38 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchElementException
 
 
 class BasePage:
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
+        self.wait = WebDriverWait(driver, 30)  # Увеличиваем таймаут до 30 секунд
         self.actions = ActionChains(driver)
 
     def open(self, url):
         self.driver.get(url)
 
     def click(self, locator):
-        self.wait.until(EC.element_to_be_clickable(locator)).click()
+        self.wait_clickable(locator).click()
 
     def fill(self, locator, value):
-        field = self.wait.until(EC.visibility_of_element_located(locator))
+        field = self.wait_visible(locator)
         field.clear()
         field.send_keys(value)
 
     def is_visible(self, locator):
-        return self.wait.until(EC.visibility_of_element_located(locator))
+        return self.wait_visible(locator)
 
     def is_not_visible(self, locator):
         return self.wait.until_not(EC.visibility_of_element_located(locator))
 
     def get_text(self, locator):
-        return self.wait.until(EC.visibility_of_element_located(locator)).text
+        return self.wait_visible(locator).text
 
     def is_element_present(self, locator):
         try:
-            self.driver.find_element(*locator)
+            self.find(locator)
             return True
         except NoSuchElementException:
             return False
@@ -60,22 +61,22 @@ class BasePage:
             EC.presence_of_element_located(locator)
         )
 
-    def wait_for_element_to_be_clickable(self, locator, timeout=10):
+    def wait_clickable(self, locator, timeout=10):
         return WebDriverWait(self.driver, timeout).until(
             EC.element_to_be_clickable(locator)
         )
 
-    def wait_for_element_to_be_visible(self, locator, timeout=10):
+    def wait_visible(self, locator, timeout=10):
         return WebDriverWait(self.driver, timeout).until(
             EC.visibility_of_element_located(locator)
         )
 
-    def wait_for_element_to_be_invisible(self, locator, timeout=10):
+    def wait_invisible(self, locator, timeout=10):
         return WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located(locator)
         )
 
-    def wait_for_url_to_contain(self, url_part, timeout=10):
+    def wait_url_contains(self, url_part, timeout=10):
         return WebDriverWait(self.driver, timeout).until(
             lambda d: url_part in d.current_url
         )
@@ -85,3 +86,23 @@ class BasePage:
 
     def get_page_source(self):
         return self.driver.page_source
+
+    def find(self, locator):
+        return self.driver.find_element(*locator)
+
+    def js_click(self, locator):
+        element = self.find(locator)
+        self.execute_script("arguments[0].click();", element)
+
+    def find_elements(self, locator):
+        return self.driver.find_elements(*locator)
+
+    def get_display_style(self, locator):
+        element = self.find(locator)
+        return self.execute_script("return window.getComputedStyle(arguments[0]).display;", element)
+
+    def is_displayed(self, locator):
+        try:
+            return self.find(locator).is_displayed()
+        except Exception:
+            return False
