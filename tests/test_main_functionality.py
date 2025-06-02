@@ -37,7 +37,6 @@ class TestMainFunctionality:
 
         with allure.step("Закрытие модального окна"):
             main_page.close_modal()
-        time.sleep(1)
 
         with allure.step("Проверка скрытия модального окна"):
             assert main_page.is_ingredient_modal_hidden(), "Модальное окно ингредиента не закрылось"
