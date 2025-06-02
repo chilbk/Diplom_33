@@ -17,7 +17,7 @@ def driver(request):
     browser = request.param
     if browser == "chrome":
         options = ChromeOptions()
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         driver = webdriver.Chrome(options=options)
     elif browser == "firefox":
         from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
